@@ -20,7 +20,7 @@ export function buildBackup(state: AppState): BackupPayload {
 export async function exportBackup(state: AppState): Promise<string> {
   const payload = buildBackup(state);
   const date = new Date().toISOString().slice(0, 10);
-  const uri = `${FileSystem.documentDirectory}Projeto_Aguia_Mobile_Backup_V36_${date}.json`;
+  const uri = `${FileSystem.cacheDirectory}Projeto_Aguia_Mobile_Backup_V36_${date}.json`;
   await FileSystem.writeAsStringAsync(uri, JSON.stringify(payload, null, 2));
   if (await Sharing.isAvailableAsync()) {
     await Sharing.shareAsync(uri);
