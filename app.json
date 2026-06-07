@@ -4,13 +4,7 @@
     "slug": "projeto-aguia-v36",
     "version": "36.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#0f2f70"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -18,14 +12,12 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#0f2f70"
-      },
       "package": "com.projetoaguia.mobile"
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
+    "extra": {
+      "eas": {
+        "projectId": "89179436-0ef5-4d6f-a558-c647685508f7"
+      }
     }
   }
 }
