@@ -17,6 +17,7 @@
     "expo-document-picker": "latest",
     "expo-file-system": "latest",
     "expo-sharing": "latest",
+    "expo-sqlite": "~56.0.4",
     "expo-status-bar": "latest",
     "react": "19.2.3",
     "react-native": "latest",
