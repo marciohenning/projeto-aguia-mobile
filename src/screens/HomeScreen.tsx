@@ -1,14 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Card } from '../components/Card';
 import { Body, Subtitle, Title } from '../components/Text';
 import { useApp } from '../services/AppContext';
 import { colors } from '../styles/theme';
+import { carregarProgressoDiario } from '../database/progressRepository';
 
 export function HomeScreen({ navigation }: any) {
   const { state } = useApp();
+
+  const [tarefasSQLite, setTarefasSQLite] = useState<number>(0);
+  const [recompensaSQLite, setRecompensaSQLite] = useState<number>(0);
+
   const cateDone = Object.keys(state.cateDone || {}).length;
   const missions = Object.values(state.money || {}).filter(v => Number(v) > 0).length;
+
+  useEffect(() => {
+    const progresso = carregarProgressoDiario('2026-06-07');
+
+    if (progresso) {
+      setTarefasSQLite(progresso.tarefasConcluidas);
+      setRecompensaSQLite(progresso.recompensa);
+    }
+  }, []);
 
   const shortcuts = [
     ['🎯', 'Missão', 'Ver tarefas de hoje', 'Missão'],
@@ -40,6 +54,12 @@ export function HomeScreen({ navigation }: any) {
         <Body>XP: {state.xp}</Body>
         <Body>Missões aprovadas: {missions}</Body>
         <Body>Catecismo: {cateDone}/52 sábados</Body>
+      </Card>
+
+      <Card>
+        <Subtitle>SQLite V37</Subtitle>
+        <Body>Tarefas salvas: {tarefasSQLite}</Body>
+        <Body>Recompensa salva: R$ {recompensaSQLite}</Body>
       </Card>
     </ScrollView>
   );
