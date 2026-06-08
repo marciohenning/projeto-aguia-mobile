@@ -6,20 +6,20 @@ import { AppProvider } from './src/services/AppContext';
 import { useEffect } from 'react';
 import { createTables } from './src/database/schema';
 import { salvarProgressoDiario } from './src/database/progressRepository';
+import { carregarProgressoDiario } from './src/database/progressRepository';
 
 export default function App() {
  useEffect(() => {
   createTables();
 
-  salvarProgressoDiario(
-    '2026-06-07',
-    5,
-    50
+  salvarProgressoDiario('2026-06-07', 5, 50);
+
+  const progresso = carregarProgressoDiario('2026-06-07');
+
+  alert(
+    `SQLite V37 OK!\nTarefas: ${progresso?.tarefasConcluidas}\nRecompensa: ${progresso?.recompensa}`
   );
-
-  alert('Progresso salvo no SQLite!');
 }, []);
-
   return (
     <AppProvider>
       <NavigationContainer>

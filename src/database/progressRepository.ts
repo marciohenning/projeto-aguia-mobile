@@ -13,9 +13,18 @@ export function salvarProgressoDiario(
   );
 }
 
-export function carregarProgressoDiario(data: string) {
-  return db.getFirstSync(
+export type ProgressoDiario = {
+  id: number;
+  data: string;
+  tarefasConcluidas: number;
+  recompensa: number;
+};
+
+export function carregarProgressoDiario(data: string): ProgressoDiario | null {
+  const resultado = db.getFirstSync(
     `SELECT * FROM progresso_diario WHERE data = ?`,
     [data]
   );
+
+  return resultado as ProgressoDiario | null;
 }
