@@ -1,23 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { AppProvider } from './src/services/AppContext';
-import { useEffect } from 'react';
 import { createTables } from './src/database/schema';
-import { salvarProgressoDiario } from './src/database/progressRepository';
-import { carregarProgressoDiario } from './src/database/progressRepository';
 
 export default function App() {
- useEffect(() => {
-  createTables();
 
-  salvarProgressoDiario('2026-06-07', 5, 50);
+  useEffect(() => {
+    createTables();
+  }, []);
 
-  const progresso = carregarProgressoDiario('2026-06-07');
-
-  console.log('SQLite V37 OK:', progresso);
-}, []);
   return (
     <AppProvider>
       <NavigationContainer>

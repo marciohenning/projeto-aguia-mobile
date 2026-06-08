@@ -21,7 +21,8 @@ export function HomeScreen({ navigation }: any) {
   const missions = Object.values(state.money || {}).filter(v => Number(v) > 0).length;
 
   useEffect(() => {
-    const progresso = carregarProgressoDiario('2026-06-07');
+    const hoje = new Date().toISOString().slice(0, 10);
+const progresso = carregarProgressoDiario(hoje);
 
     if (progresso) {
       setTarefasSQLite(progresso.tarefasConcluidas);
