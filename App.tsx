@@ -16,9 +16,7 @@ export default function App() {
 
   const progresso = carregarProgressoDiario('2026-06-07');
 
-  alert(
-    `SQLite V37 OK!\nTarefas: ${progresso?.tarefasConcluidas}\nRecompensa: ${progresso?.recompensa}`
-  );
+  console.log('SQLite V37 OK:', progresso);
 }, []);
   return (
     <AppProvider>
