@@ -8,9 +8,9 @@ import { createTables } from './src/database/schema';
 
 export default function App() {
   useEffect(() => {
-    createTables();
-    console.log('Banco SQLite da V37 iniciado com sucesso.');
-  }, []);
+  createTables();
+  alert("SQLite V37 inicializado com sucesso!");
+}, []);
 
   return (
     <AppProvider>
