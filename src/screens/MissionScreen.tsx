@@ -4,6 +4,7 @@ import { Card } from '../components/Card';
 import { Body, Subtitle, Title } from '../components/Text';
 import { useApp } from '../services/AppContext';
 import { colors } from '../styles/theme';
+import { salvarProgressoDiario } from '../database/progressRepository';
 
 const tasks = [
   ['Português', 'Interpretação e gramática'],
@@ -22,18 +23,44 @@ export function MissionScreen() {
   const complete = done === tasks.length;
   const approved = Number(state.money[key] || 0) > 0;
 
+  function salvarNoSQLite(tarefasConcluidas: number, recompensa: number) {
+    salvarProgressoDiario(key, tarefasConcluidas, recompensa);
+  }
+
   function toggle(i: number) {
     const id = `${key}-${i}`;
-    setState(prev => ({ ...prev, checked: { ...prev.checked, [id]: !prev.checked[id] } }));
+
+    setState(prev => {
+      const novoChecked = {
+        ...prev.checked,
+        [id]: !prev.checked[id]
+      };
+
+      const novoDone = tasks.filter((_, index) => novoChecked[`${key}-${index}`]).length;
+
+      salvarNoSQLite(novoDone, Number(prev.money[key] || 0));
+
+      return {
+        ...prev,
+        checked: novoChecked
+      };
+    });
   }
 
   function approve() {
     if (!complete || approved) return;
-    setState(prev => ({
-      ...prev,
-      xp: prev.xp + 10,
-      money: { ...prev.money, [key]: 10 }
-    }));
+
+    setState(prev => {
+      const recompensa = 10;
+
+      salvarNoSQLite(done, recompensa);
+
+      return {
+        ...prev,
+        xp: prev.xp + 10,
+        money: { ...prev.money, [key]: recompensa }
+      };
+    });
   }
 
   return (
@@ -42,6 +69,7 @@ export function MissionScreen() {
         <Title>🎯 Missão do Dia</Title>
         <Body>{done}/{tasks.length} tarefas concluídas</Body>
       </Card>
+
       {tasks.map((task, i) => (
         <Card key={task[0]}>
           <Subtitle>{task[0]}</Subtitle>
@@ -49,6 +77,7 @@ export function MissionScreen() {
           <Switch value={!!state.checked[`${key}-${i}`]} onValueChange={() => toggle(i)} />
         </Card>
       ))}
+
       <TouchableOpacity style={[styles.button, (!complete || approved) && styles.disabled]} onPress={approve}>
         <Title style={styles.buttonText}>{approved ? 'Missão aprovada' : 'Aprovar missão (+10 XP)'}</Title>
       </TouchableOpacity>
