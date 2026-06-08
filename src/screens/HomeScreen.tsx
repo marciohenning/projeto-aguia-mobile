@@ -4,13 +4,18 @@ import { Card } from '../components/Card';
 import { Body, Subtitle, Title } from '../components/Text';
 import { useApp } from '../services/AppContext';
 import { colors } from '../styles/theme';
-import { carregarProgressoDiario } from '../database/progressRepository';
+import {
+  carregarProgressoDiario,
+  listarHistoricoProgresso,
+  ProgressoDiario
+} from '../database/progressRepository';
 
 export function HomeScreen({ navigation }: any) {
   const { state } = useApp();
 
   const [tarefasSQLite, setTarefasSQLite] = useState<number>(0);
   const [recompensaSQLite, setRecompensaSQLite] = useState<number>(0);
+  const [historico, setHistorico] = useState<ProgressoDiario[]>([]);
 
   const cateDone = Object.keys(state.cateDone || {}).length;
   const missions = Object.values(state.money || {}).filter(v => Number(v) > 0).length;
@@ -22,6 +27,9 @@ export function HomeScreen({ navigation }: any) {
       setTarefasSQLite(progresso.tarefasConcluidas);
       setRecompensaSQLite(progresso.recompensa);
     }
+
+    const lista = listarHistoricoProgresso();
+    setHistorico(lista);
   }, []);
 
   const shortcuts = [
@@ -41,7 +49,11 @@ export function HomeScreen({ navigation }: any) {
 
       <View style={styles.grid}>
         {shortcuts.map(([icon, title, desc, route]) => (
-          <TouchableOpacity key={title} style={styles.quick} onPress={() => navigation.navigate(route)}>
+          <TouchableOpacity
+            key={title}
+            style={styles.quick}
+            onPress={() => navigation.navigate(route)}
+          >
             <Title>{icon}</Title>
             <Subtitle>{title}</Subtitle>
             <Body>{desc}</Body>
@@ -61,6 +73,19 @@ export function HomeScreen({ navigation }: any) {
         <Body>Tarefas salvas: {tarefasSQLite}</Body>
         <Body>Recompensa salva: R$ {recompensaSQLite}</Body>
       </Card>
+
+      <Card>
+        <Subtitle>📅 Histórico de Missões</Subtitle>
+        {historico.length === 0 ? (
+          <Body>Nenhuma missão salva ainda.</Body>
+        ) : (
+          historico.map(item => (
+            <Body key={item.data}>
+              {item.data} — {item.tarefasConcluidas} tarefas — R$ {item.recompensa}
+            </Body>
+          ))
+        )}
+      </Card>
     </ScrollView>
   );
 }
@@ -68,5 +93,11 @@ export function HomeScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: colors.bg, padding: 12 },
   grid: { gap: 10 },
-  quick: { backgroundColor: '#fff', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: '#dbeafe' }
+  quick: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#dbeafe'
+  }
 });
